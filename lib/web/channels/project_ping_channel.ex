@@ -19,9 +19,9 @@ defmodule BorsNG.ProjectPingChannel do
   alias BorsNG.Database.Context.Permission
 
   def join("project_ping:" <> project_id, _message, socket) do
-    (not Confex.fetch_env!(:bors, BorsNG)[:allow_private_repos]) ||
-      Permission.get_permission(socket.assigns.user, %Project{id: project_id})
-    |> if do
+    ok? = ((not Confex.fetch_env!(:bors, BorsNG)[:allow_private_repos]) ||
+      Permission.get_permission(socket.assigns.user, %Project{id: project_id}))
+    if ok? do
       {:ok, socket}
     else
       {:error, :permission_denied}
